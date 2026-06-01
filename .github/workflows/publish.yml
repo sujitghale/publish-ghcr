@@ -32,15 +32,18 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
 
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       # 4. Build and push Docker image
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: .  
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:${{ env.SHORT_SHA }}
 
           labels: |
             org.opencontainers.image.revision=${{ github.sha }}
